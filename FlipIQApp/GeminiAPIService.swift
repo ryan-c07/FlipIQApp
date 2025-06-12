@@ -49,7 +49,7 @@ struct GeminiErrorDetail: Codable {
 }
 
 class GeminiAPIService: ObservableObject {
-    private let apiKey = "YOUR_API_KEY_HERE" // Replace with your actual API key
+    private let apiKey = "AIzaSyDLoG7UEZsbhmTGoEw5U7GOSEUvCUdag0o" // Replace with your actual API key
     private let baseURL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
     
     @Published var isLoading = false

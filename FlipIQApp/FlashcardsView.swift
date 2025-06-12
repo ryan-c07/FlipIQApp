@@ -22,7 +22,12 @@ struct FlashcardsView: View {
                     FlashcardSessionView(
                         guide: guide,
                         currentIndex: $currentCardIndex,
-                        showingAnswer: $showingAnswer
+                        showingAnswer: $showingAnswer,
+                        onBack: {
+                            selectedGuide = nil
+                            currentCardIndex = 0
+                            showingAnswer = false
+                        }
                     )
                 } else {
                     FlashcardSelectionView(selectedGuide: $selectedGuide)
@@ -62,6 +67,7 @@ struct FlashcardSessionView: View {
     let guide: StudyGuide
     @Binding var currentIndex: Int
     @Binding var showingAnswer: Bool
+    let onBack: () -> Void
     
     var currentCard: Flashcard {
         guide.flashcards[currentIndex]
@@ -70,12 +76,39 @@ struct FlashcardSessionView: View {
     var body: some View {
         VStack(spacing: 24) {
             HStack {
+                Button(action: onBack) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "chevron.left")
+                        Text("Back")
+                    }
+                    .foregroundColor(.primaryBlue)
+                    .font(.system(size: 16, weight: .medium))
+                }
+                
+                Spacer()
+                
                 Text("\(currentIndex + 1) of \(guide.flashcards.count)")
                     .font(.caption)
                     .foregroundColor(.secondary)
+                
                 Spacer()
+                
+                HStack(spacing: 4) {
+                    Image(systemName: "chevron.left")
+                    Text("Back")
+                }
+                .opacity(0)
             }
             .padding(.horizontal)
+            
+            VStack(spacing: 4) {
+                Text(guide.subject)
+                    .font(.headline)
+                    .foregroundColor(.primaryBlue)
+                Text(guide.topic)
+                    .font(.subheadline)
+                    .foregroundColor(.secondaryBlue)
+            }
             
             VStack(spacing: 20) {
                 Text(showingAnswer ? "Answer" : "Question")
@@ -107,6 +140,7 @@ struct FlashcardSessionView: View {
                     }
                 }
                 .disabled(currentIndex == 0)
+                .foregroundColor(currentIndex == 0 ? .gray : .primaryBlue)
                 
                 Button("Flip Card") {
                     withAnimation(.easeInOut(duration: 0.3)) {
@@ -124,8 +158,11 @@ struct FlashcardSessionView: View {
                     }
                 }
                 .disabled(currentIndex == guide.flashcards.count - 1)
+                .foregroundColor(currentIndex == guide.flashcards.count - 1 ? .gray : .primaryBlue)
             }
             .padding()
+            
+            Spacer()
         }
         .padding()
     }
